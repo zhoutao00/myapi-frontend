@@ -9,11 +9,12 @@ const Settings: ProLayoutProps & {
 } = {
   navTheme: 'light',
   // 拂晓蓝
-  colorPrimary: '#1890ff',
-  layout: 'mix',
-  contentWidth: 'Fluid',
+  colorPrimary: '#1677FF',
+  layout: 'top',
+  contentWidth: 'Fixed',
   fixedHeader: false,
   fixSiderbar: true,
+  splitMenus: false,
   colorWeak: false,
   title: 'Ant Design Pro',
   pwa: true,

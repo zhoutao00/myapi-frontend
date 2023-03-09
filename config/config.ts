@@ -79,7 +79,7 @@ export default defineConfig({
   title: 'Ant Design Pro',
   layout: {
     locale: true,
-    ...defaultSettings,
+    ...defaultSettings
   },
   /**
    * @name moment2dayjs 插件
