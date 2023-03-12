@@ -11,7 +11,7 @@ export default [
     icon: 'crown',
     access: 'canAdmin',
     routes: [
-      { name: '查询表格', icon: 'table', path: '/admin/interface_info', component: './InterfaceInfo' },
+      { name: '查询表格', icon: 'table', path: '/admin/interface_info', component: './Admin/InterfaceInfo' },
       // { path: '/admin', redirect: '/admin/sub-page' },
       // { path: '/admin/sub-page', name: '二级管理页', component: './Admin' },
     ],

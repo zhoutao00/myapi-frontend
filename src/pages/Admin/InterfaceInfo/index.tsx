@@ -13,12 +13,16 @@ import { FormattedMessage, useIntl } from '@umijs/max';
 import { Button, Drawer, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import {
-  addInterfaceInfoUsingPOST, deleteInterfaceInfoUsingPOST,
-  listInterfaceInfoVOByPageUsingPOST, updateInterfaceInfoUsingPOST
+  addInterfaceInfoUsingPOST,
+  deleteInterfaceInfoUsingPOST,
+  listInterfaceInfoVOByPageUsingPOST,
+  offlineInterfaceInfoUsingPOST,
+  onlineInterfaceInfoUsingPOST,
+  updateInterfaceInfoUsingPOST
 } from "@/services/myapi-backend/interfaceInfoController";
 import {SortOrder} from "antd/es/table/interface";
-import CreateModal from "@/pages/InterfaceInfo/components/CreateModal";
-import UpdateModal from "@/pages/InterfaceInfo/components/UpdateModal";
+import CreateModal from "@/pages/Admin/InterfaceInfo/components/CreateModal";
+import UpdateModal from "@/pages/Admin/InterfaceInfo/components/UpdateModal";
 
 
 
@@ -64,6 +68,54 @@ const TableList: React.FC = () => {
     } catch (error: any) {
       hide();
       message.error('删除失败，' + error.message);
+      return false;
+    }
+  };
+
+  /**
+   *  Online node
+   * @zh-CN 发布节点
+   *
+   * @param record
+   */
+  const handleOnline = async (record: API.IdRequeset) => {
+    const hide = message.loading('正在发布');
+    if (!record) return true;
+    try {
+      await onlineInterfaceInfoUsingPOST({
+        id: record.id
+      });
+      hide();
+      message.success('发布成功');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('发布失败，' + error.message);
+      return false;
+    }
+  };
+
+  /**
+   *  Offline node
+   * @zh-CN 发布节点
+   *
+   * @param record
+   */
+  const handleOffline = async (record: API.IdRequeset) => {
+    const hide = message.loading('正在下线');
+    if (!record) return true;
+    try {
+      await offlineInterfaceInfoUsingPOST({
+        id: record.id
+      });
+      hide();
+      message.success('下线成功');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('下线失败，' + error.message);
       return false;
     }
   };
@@ -187,6 +239,7 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
+
         <a
           key="config"
           onClick={() => {
@@ -196,14 +249,32 @@ const TableList: React.FC = () => {
         >
           修改
         </a>,
-        <a
+        record.status === 0 ? <a
+          key="config"
+          onClick={() => {
+            handleOnline(record);
+          }}
+        >
+          发布
+        </a> : false,
+        record.status === 1 ? <a
+          key="config"
+          onClick={() => {
+            handleOffline(record);
+          }}
+        >
+          下线
+        </a> : false,
+        <Button
+          type="text"
+          danger
           key="config"
           onClick={() => {
             handleRemove(record);
           }}
         >
           删除
-        </a>,
+        </Button>,
       ],
     },
   ];
