@@ -119,7 +119,7 @@ const Login: React.FC = () => {
       const res = await userLoginUsingPOST({ ...values});
       if (res.data) {
         const urlParams = new URL(window.location.href).searchParams;
-        history.push('/' || urlParams.get('redirect'));
+        history.push('/' || urlParams.get('redirect') );
         setInitialState({
           loginUser: res.data,
         });

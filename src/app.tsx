@@ -1,7 +1,6 @@
 import Footer from '@/components/Footer';
 import { Question, SelectLang } from '@/components/RightContent';
 import { LinkOutlined } from '@ant-design/icons';
-import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import { requestConfig } from './requestConfig';
@@ -24,20 +23,20 @@ export async function getInitialState(): Promise<InitialState> {
     if (res.data) {
       state.loginUser = res.data;
     }
+
   } catch (error) {
     history.push(loginPath);
   }
   return state;
-
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState}) => {
   return {
-    actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
+    //<Question key="doc" />, <SelectLang key="SelectLang" />
+    actionsRender: () => [],
     avatarProps: {
-      src: 'https://tse4-mm.cn.bing.net/th/id/OIP-C.7KW5GT7NQ8yUGlBbCHEm0gHaNK?pid=ImgDet&rs=1',
-      //src: initialState?.loginUser?.userAvatar,
+      src: initialState?.loginUser?.userAvatar,
       title: <AvatarName />,
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
@@ -74,19 +73,19 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         width: '331px',
       },
     ],
-    links: isDev
+    /*links: isDev
       ? [
           <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
             <LinkOutlined />
             <span>OpenAPI 文档</span>
           </Link>,
         ]
-      : [],
+      : [],*/
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
-    childrenRender: (children) => {
+    /*childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
       return (
         <>
@@ -105,7 +104,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </>
       );
     },
-    ...initialState?.settings,
+    ...initialState?.settings,*/
   };
 };
 

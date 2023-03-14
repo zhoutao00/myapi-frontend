@@ -47,6 +47,21 @@ export async function getInterfaceInfoVOByIdUsingGET(
   });
 }
 
+/** invokeInterfaceInfo POST /api/interfaceInfo/invoke */
+export async function invokeInterfaceInfoUsingPOST(
+  body: API.InterfaceInfoInvokeRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseObject_>('/api/interfaceInfo/invoke', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** listInterfaceInfo GET /api/interfaceInfo/list */
 export async function listInterfaceInfoUsingGET(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -62,17 +77,17 @@ export async function listInterfaceInfoUsingGET(
   });
 }
 
-/** listInterfaceInfoVOByPage POST /api/interfaceInfo/list/page */
-export async function listInterfaceInfoVOByPageUsingPOST(
-  body: API.InterfaceInfoQueryRequest,
+/** listInterfaceInfoVOByPage GET /api/interfaceInfo/list/page */
+export async function listInterfaceInfoVOByPageUsingGET(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.listInterfaceInfoVOByPageUsingGETParams,
   options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePageInterfaceInfo_>('/api/interfaceInfo/list/page', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+    method: 'GET',
+    params: {
+      ...params,
     },
-    data: body,
     ...(options || {}),
   });
 }

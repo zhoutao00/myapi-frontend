@@ -15,7 +15,7 @@ import React, { useRef, useState } from 'react';
 import {
   addInterfaceInfoUsingPOST,
   deleteInterfaceInfoUsingPOST,
-  listInterfaceInfoVOByPageUsingPOST,
+  listInterfaceInfoVOByPageUsingGET,
   offlineInterfaceInfoUsingPOST,
   onlineInterfaceInfoUsingPOST,
   updateInterfaceInfoUsingPOST
@@ -41,12 +41,11 @@ const TableList: React.FC = () => {
    * @zh-CN 分布更新窗口的弹窗
    * */
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
-
   const [showDetail, setShowDetail] = useState<boolean>(false);
-
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.RuleListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API.RuleListItem[]>([]);
+  const [currentRow, setCurrentRow] = useState<API.InterfaceInfo>();
+  const [selectedRowsState, setSelectedRows] = useState<API.InterfaceInfo[]>([]);
+
 
   /**
    *  Delete node
@@ -148,9 +147,13 @@ const TableList: React.FC = () => {
    * @param fields
    */
   const handleUpdate = async (fields: API.InterfaceInfo) => {
+    if (!currentRow) {
+      return ;
+    }
     const hide = message.loading('修改中');
     try {
       await updateInterfaceInfoUsingPOST({
+        id: currentRow.id,
         ...fields
       });
       hide();
@@ -171,6 +174,11 @@ const TableList: React.FC = () => {
   const intl = useIntl();
 
   const columns: ProColumns<API.InterfaceInfo>[] = [
+    {
+      title: 'id',
+      dataIndex: 'id',
+      hideInTable: true,
+    },
     {
       title: '接口名称',
       dataIndex: 'name',
@@ -195,16 +203,20 @@ const TableList: React.FC = () => {
       title: "接口地址",
       dataIndex: 'url',
       valueType: 'text',
+    },{
+      title: "请求参数",
+      dataIndex: 'requestParams',
+      valueType: 'jsonCode',
     },
     {
       title: "请求头",
       dataIndex: 'requestHeader',
-      valueType: 'textarea',
+      valueType: 'jsonCode',
     },
     {
       title: "响应头",
       dataIndex: 'responseHeader',
-      valueType: 'textarea',
+      valueType: 'jsonCode',
     },
     {
       title: '状态',
@@ -250,21 +262,19 @@ const TableList: React.FC = () => {
           修改
         </a>,
         record.status === 0 ? <a
-          key="config"
           onClick={() => {
             handleOnline(record);
           }}
         >
           发布
-        </a> : false,
+        </a> : null,
         record.status === 1 ? <a
-          key="config"
           onClick={() => {
             handleOffline(record);
           }}
         >
           下线
-        </a> : false,
+        </a> : null,
         <Button
           type="text"
           danger
@@ -303,7 +313,7 @@ const TableList: React.FC = () => {
           </Button>,
         ]}
         request={async (params, sort: Record<string, SortOrder>, filter: Record<string, (string | number)[] | null>) => {
-          const res: any = await listInterfaceInfoVOByPageUsingPOST({
+          const res: any = await listInterfaceInfoVOByPageUsingGET({
             ...params
           })
           if (res?.data) {
